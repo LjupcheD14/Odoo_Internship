@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Tree View for hobby.hobby -->
+        <record id="view_hobby_tree" model="ir.ui.view">
+            <field name="name">hobby.hobby.tree.view</field>
+            <field name="model">hobby.hobby</field>
+            <field name="arch" type="xml">
+                <list string="Hobby List">
+                    <!--                    <field name="id"/>-->
+                    <field name="name"/>
+                    <!--                    <field name="student_list"/>-->
+                </list>
+            </field>
+        </record>
+
+        <record id="view_hobby_form" model="ir.ui.view">
+            <field name="name">hobby.hobby.form.view</field>
+            <field name="model">hobby.hobby</field>
+            <field name="arch" type="xml">
+                <form string="Hobby">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action for student.student model -->
+        <record id="action_hobby_hobby" model="ir.actions.act_window">
+            <field name="name">Hobbies</field>
+            <field name="res_model">hobby.hobby</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_hobby_tree"/>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_hobby_root" name="Hobbies" sequence="1"/>
+        <menuitem id="menu_hobby_management" name="Manage Hobbies" parent="menu_hobby_root" sequence="10"/>
+        <menuitem id="menu__list" name="Hobby List" parent="menu_hobby_management" action="action_hobby_hobby"
+                  sequence="20"/>
+
+
+<!--        <menuitem id="menu_student_root" name="Students" sequence="1"/>-->
+<!--        <menuitem id="menu_student_management" name="Manage Students" parent="menu_student_root" sequence="10"/>-->
+<!--        <menuitem id="menu__list" name="Hobby List" parent="menu_hobby_management" action="action_hobby_hobby"-->
+<!--                  sequence="20"/>-->
+
+    </data>
+</odoo>

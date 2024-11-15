@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <templates>
+        <h2>TEST</h2>
+        <t t-name="WBSampleButton" owl="1">
+            <h2>TEST H2</h2>
+            <div class="control-button">
+                <h2>TEST H3</h2>
+
+                <!-- Use rel (if needed) or remove if not necessary -->
+                <i class="fa" role="img" aria-label="WB Sample Button" title="WB Sample Button"/>
+                WB Button
+            </div>
+        </t>
+    </templates>
+</odoo>
+
+
+        <!--<?xml version="1.0" encoding="UTF-8" ?>-->
+        <!--<odoo>-->
+        <!--    <template id="custom_pos_button" inherit_id="point_of_sale.Buttons">-->
+        <!--        <xpath expr="//div[@class='control-buttons']" position="inside">-->
+        <!--            <button type="button" class="btn btn-primary custom-button">Custom Action</button>-->
+        <!--        </xpath>-->
+        <!--    </template>-->
+        <!--</odoo>-->
+
+
+        <!--<?xml version="1.0" encoding="UTF-8"?>-->
+        <!--<templates>-->
+        <!--    &lt;!&ndash; Define the template for the custom button &ndash;&gt;-->
+        <!--    <t t-name="CustomButtonTemplate">-->
+        <!--        <div class="control-button" t-on-click="handleClick">-->
+        <!--            <i class="fa fa-cogs" aria-label="Custom Button" title="Custom Button"></i>-->
+        <!--            Custom Button-->
+        <!--        </div>-->
+        <!--    </t>-->
+        <!--</templates>-->
+
