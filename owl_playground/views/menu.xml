@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Define the action that will load the template -->
+    <record id="action_owl_playground" model="ir.actions.client">
+        <field name="name">Awesome T-Shirt Thank You</field>
+        <field name="tag">owl_playground.playground</field>
+    </record>
+
+    <!-- Define the top-level menu item -->
+    <menuitem id="owl_playground_menu" name="Owl Playground" sequence="10"/>
+
+    <!-- Define the sub-menu item that links to the action -->
+    <menuitem id="owl_playground_submenu" name="Thank You Page" parent="owl_playground_menu" action="action_owl_playground" sequence="1"/>
+</odoo>

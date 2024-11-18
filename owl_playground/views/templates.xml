@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="owl_playground.playground" name="Awesome T-Shirt Thank You">
+            <html>
+                <head>
+                    <!-- Add the CSS or JS that you need -->
+                    <t t-call-assets="owl_playground.assets_playground"/>
+                </head>
+                <body>
+                    <!-- Your template content goes here -->
+                    <h1>Thank you for your order!</h1>
+                    <p>We hope you enjoy your awesome T-shirt!</p>
+                </body>
+            </html>
+        </template>
+    </data>
+</odoo>
