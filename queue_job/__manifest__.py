@@ -1,8 +1,8 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html)
 
 {
-    "name": "Job Queue",
-    "version": "18.0",
+    "name": "Job Queue 18",
+    "version": "18.0.1.0.0",
     "author": "Camptocamp,ACSONE SA/NV,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/queue",
     "license": "LGPL-3",

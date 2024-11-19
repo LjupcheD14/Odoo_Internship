@@ -11,11 +11,11 @@ from io import StringIO
 from psycopg2 import OperationalError, errorcodes
 from werkzeug.exceptions import BadRequest, Forbidden
 
-from odoo import SUPERUSER_ID, _, api, http, registry, tools
+from odoo import SUPERUSER_ID, _, api, http, registry
 from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
 
 from ..delay import chain, group
-from ..exception import FailedJobError, NothingToDoJob, RetryableJobError
+from ..exception import FailedJobError, RetryableJobError
 from ..job import ENQUEUED, Job
 
 _logger = logging.getLogger(__name__)
@@ -34,6 +34,9 @@ class RunJobController(http.Controller):
         _logger.debug("%s started", job)
 
         job.perform()
+        # Triggers any stored computed fields before calling 'set_done'
+        # so that will be part of the 'exec_time'
+        env.flush_all()
         job.set_done()
         job.store()
         env.flush_all()
@@ -109,18 +112,7 @@ class RunJobController(http.Controller):
                     raise
 
                 _logger.debug("%s OperationalError, postponed", job)
-                raise RetryableJobError(
-                    tools.ustr(err.pgerror, errors="replace"), seconds=PG_RETRY
-                ) from err
-
-        except NothingToDoJob as err:
-            if str(err):
-                msg = str(err)
-            else:
-                msg = _("Job interrupted and set to Done: nothing to do.")
-            job.set_done(msg)
-            job.store()
-            env.cr.commit()
+                raise RetryableJobError(err.pgerror, seconds=PG_RETRY) from err
 
         except RetryableJobError as err:
             # delay the job later, requeue
@@ -292,6 +284,6 @@ class RunJobController(http.Controller):
 
         root_delayable.delay()
 
-        return "graph uuid: {}".format(
-            list(root_delayable._head())[0]._generated_job.graph_uuid
+        return (
+            f"graph uuid: {list(root_delayable._head())[0]._generated_job.graph_uuid}"
         )

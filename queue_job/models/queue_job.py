@@ -75,9 +75,6 @@ class QueueJob(models.Model):
 
     model_name = fields.Char(string="Model", readonly=True)
     method_name = fields.Char(readonly=True)
-    # record_ids field is only for backward compatibility (e.g. used in related
-    # actions), can be removed (replaced by "records") in 14.0
-    record_ids = JobSerialized(compute="_compute_record_ids", base_type=list)
     records = JobSerialized(
         string="Record(s)",
         readonly=True,
@@ -94,7 +91,7 @@ class QueueJob(models.Model):
     state = fields.Selection(STATES, readonly=True, required=True, index=True)
     priority = fields.Integer()
     exc_name = fields.Char(string="Exception", readonly=True)
-    exc_message = fields.Char(string="Exception Message", readonly=True)
+    exc_message = fields.Char(string="Exception Message", readonly=True, tracking=True)
     exc_info = fields.Text(string="Exception Info", readonly=True)
     result = fields.Text(readonly=True)
 
@@ -104,7 +101,7 @@ class QueueJob(models.Model):
     date_done = fields.Datetime(readonly=True)
     exec_time = fields.Float(
         string="Execution Time (avg)",
-        group_operator="avg",
+        aggregator="avg",
         help="Time required to execute this job in seconds. Average when grouped.",
     )
     date_cancelled = fields.Datetime(readonly=True)
@@ -114,8 +111,8 @@ class QueueJob(models.Model):
     max_retries = fields.Integer(
         string="Max. retries",
         help="The job will fail if the number of tries reach the "
-             "max. retries.\n"
-             "Retries are infinite when empty.",
+        "max. retries.\n"
+        "Retries are infinite when empty.",
     )
     # FIXME the name of this field is very confusing
     channel_method_name = fields.Char(string="Complete Method Name", readonly=True)
@@ -139,13 +136,8 @@ class QueueJob(models.Model):
             self._cr.execute(
                 "CREATE INDEX queue_job_identity_key_state_partial_index "
                 "ON queue_job (identity_key) WHERE state in ('pending', "
-                "'enqueued') AND identity_key IS NOT NULL;"
+                "'enqueued', 'wait_dependencies') AND identity_key IS NOT NULL;"
             )
-
-    @api.depends("records")
-    def _compute_record_ids(self):
-        for record in self:
-            record.record_ids = record.records.ids
 
     @api.depends("dependencies")
     def _compute_dependency_graph(self):
@@ -210,8 +202,9 @@ class QueueJob(models.Model):
         }
         return {
             "id": self.id,
-            "title": "<strong>{}</strong><br/>{}".format(
-                html_escape(self.display_name), html_escape(self.func_string)
+            "title": (
+                f"<strong>{html_escape(self.display_name)}</strong><br/>"
+                f"{html_escape(self.func_string)}"
             ),
             "color": colors.get(self.state, default)[0],
             "border": colors.get(self.state, default)[1],
@@ -326,23 +319,24 @@ class QueueJob(models.Model):
             elif state == CANCELLED:
                 job_.set_cancelled(result=result)
                 job_.store()
+                record.env["queue.job"].flush_model()
+                job_.cancel_dependent_jobs()
             else:
-                raise ValueError("State not supported: %s" % state)
+                raise ValueError(f"State not supported: {state}")
 
     def button_done(self):
-        result = _("Manually set to done by %s") % self.env.user.name
+        result = _("Manually set to done by {}").format(self.env.user.name)
         self._change_job_state(DONE, result=result)
         return True
 
     def button_cancelled(self):
-        result = _("Cancelled by %s") % self.env.user.name
+        result = _("Cancelled by {}").format(self.env.user.name)
         self._change_job_state(CANCELLED, result=result)
         return True
 
     def requeue(self):
-        # jobs_to_requeue = self.filtered(lambda job_: job_.state != WAIT_DEPENDENCIES)
-        # jobs_to_requeue._change_job_state(PENDING)
-        self.write({'state': 'enqueued', 'date_started': fields.Datetime.now()})
+        jobs_to_requeue = self.filtered(lambda job_: job_.state != WAIT_DEPENDENCIES)
+        jobs_to_requeue._change_job_state(PENDING)
         return True
 
     def _message_post_on_failure(self):
@@ -416,30 +410,19 @@ class QueueJob(models.Model):
         return True
 
     def requeue_stuck_jobs(self, enqueued_delta=5, started_delta=0):
-        stuck_jobs = self._get_stuck_jobs_to_requeue(
+        """Fix jobs that are in a bad states
+
+        :param in_queue_delta: lookup time in minutes for jobs
+                                that are in enqueued state
+
+        :param started_delta: lookup time in minutes for jobs
+                                that are in enqueued state,
+                                0 means that it is not checked
+        """
+        self._get_stuck_jobs_to_requeue(
             enqueued_delta=enqueued_delta, started_delta=started_delta
-        )
-
-        if stuck_jobs:
-            stuck_jobs.requeue()
-            return True
-        else:
-            return False  # Or log if no stuck jobs were found
-
-    # def requeue_stuck_jobs(self, enqueued_delta=5, started_delta=0):
-    #     """Fix jobs that are in a bad states
-    #
-    #     :param in_queue_delta: lookup time in minutes for jobs
-    #                             that are in enqueued state
-    #
-    #     :param started_delta: lookup time in minutes for jobs
-    #                             that are in enqueued state,
-    #                             0 means that it is not checked
-    #     """
-    #     self._get_stuck_jobs_to_requeue(
-    #         enqueued_delta=enqueued_delta, started_delta=started_delta
-    #     ).requeue()
-    #     return True
+        ).requeue()
+        return True
 
     def _get_stuck_jobs_domain(self, queue_dl, started_dl):
         domain = []
