@@ -9,58 +9,59 @@ class ProductTemplate(models.Model):
     # Add any custom fields if needed
     is_storable = fields.Boolean(string="Is Storable?", default=True)
 
-    # def action_enqueue_job(self):
-    #     """
-    #     Method to enqueue a background task to update product details.
-    #     """
-    #     for product in self:
-    #         # Enqueue a background job to perform the update
-    #         self.env['queue.job'].sudo().with_context(
-    #             product_id=product.id
-    #         ).requeue(self._update_product_job, product.id)
-    #
-    #     return True
-
     def action_enqueue_job(self):
-        for product in self:
-            product.with_delay().update_product_job()
+        print("I am clicked")
 
-    def update_product_job(self):
-        self.write({'name': self.name + ' (Updated)'})
+        now = fields.Datetime.now()
 
-    # def action_update_product(self):
-    #     """
-    #     Method to update the product template with the required fields.
-    #     This method is triggered by the button on the product form.
-    #     """
-    #     # Define the tax: create it if it doesn't exist
-    #     tax = self.env.ref('account.tax_19', raise_if_not_found=False)
-    #     if not tax:
-    #         tax = self.env['account.tax'].create({
-    #             'name': '19% VAT',
-    #             'amount': 19.0,
-    #             'type_tax_use': 'sale',  # It will apply to sales
-    #             'amount_type': 'percent',
-    #             'active': True,
-    #             'company_id': self.env.company.id,
-    #         })
-    #
-    #     # Loop through selected products and update them
-    #     for product in self:
-    #         # Set the current time and format it as a string
-    #         current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    #
-    #         # Update the product fields
-    #         product.write({
-    #             'name': f"Product 1 {current_time}",
-    #             'sale_description': f"This is the description after job run {current_time}",
-    #             'list_price': 10.1,  # Sales price
-    #         })
-    #
-    #         # Update the tax (if necessary, adjust your product's tax_ids field)
-    #         if tax not in product.taxes_id:
-    #             product.write({
-    #                 'taxes_id': [(4, tax.id)],  # Add tax to product
-    #             })
-    #
-    #     return True
+        # Search for the tax record with the name '19%'
+        tax_19 = self.env['account.tax'].search([('name', '=', '19%')], limit=1)
+
+        if not tax_19:
+            # If the tax is not found, create it
+
+            # Find or create the tax group (you may want to change the name or ID based on your setup)
+            tax_group = self.env['account.tax.group'].search([('name', '=', 'General Sales Taxes')], limit=1)
+
+            if not tax_group:
+                # If the tax group doesn't exist, create a default one
+                tax_group = self.env['account.tax.group'].create({
+                    'name': 'General Sales Taxes',
+                })
+
+            # Create the tax '19%'
+            tax_19 = self.env['account.tax'].create({
+                'name': '19%',
+                'amount': 19.0,  # Adjust the tax rate
+                'type_tax_use': 'purchase',  # Or 'sale' depending on the use case
+                'tax_group_id': tax_group.id,  # Assign the created or existing tax group
+                'amount_type': 'percent',
+            })
+            print("Tax '19%' created.")
+
+        # Assign the tax to the 'supplier_taxes_id' field (many2many relation)
+        supplier_taxes_values = [(6, 0, [tax_19.id])]
+
+        # Define the values dictionary
+        values = {
+            "name": "Product 1 " + str(now),
+            "description_sale": "This is the description after the job run + exact timedate of clicking " + str(now),
+            "list_price": 10.1,
+            "barcode": "BarCodeTEST123" + str(now),
+            "is_storable": True,
+            "supplier_taxes_id": supplier_taxes_values,  # Overwriting the supplier_taxes_id
+        }
+
+        print("Values being passed:", values)
+
+        # Call the method to update the product job
+        self.with_delay().update_product_job(values)
+
+    def update_product_job(self, values):
+        if not isinstance(values, dict):
+            raise ValueError("Values must be dictionaries")
+        print(f"I am updating the product {self.name}")
+
+        self.write(values)
+        print(f"I am updated the product with new name:  {self.name}")
+        return
