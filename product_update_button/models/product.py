@@ -17,10 +17,6 @@ class ProductTemplate(models.Model):
 
         now = fields.Datetime.now()
 
-        # Get or create the '19%' tax
-        # tax_19 = self._get_or_create_tax_19()
-        # tax_15 = self._get_or_create_tax_15()
-
         # To get or create tax 19%
         tax_19 = self._get_or_create_tax(19)
 
@@ -28,9 +24,6 @@ class ProductTemplate(models.Model):
         tax_15 = self._get_or_create_tax(15)
 
         barcode_value = self.generate_barcode_value()
-
-        # Prepare the supplier taxes values
-        # supplier_taxes_values = [(6, 0, [tax_19.id])]
 
         taxes_values = (4, tax_19.id)
         supplier_taxes_values = (4, tax_15.id)
@@ -102,8 +95,6 @@ class ProductTemplate(models.Model):
         barcode_value = ''.join(random.choices(string.digits, k=12))  # EAN-13 is 12 digits long
         self.barcode_value = barcode_value
         return barcode_value
-
-
 
 
     # def action_enqueue_job(self):
