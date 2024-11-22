@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-from addons.queue_job.job import Job
+
 import random
 import string
 
@@ -18,8 +18,14 @@ class ProductTemplate(models.Model):
         now = fields.Datetime.now()
 
         # Get or create the '19%' tax
-        tax_19 = self._get_or_create_tax_19()
-        tax_15 = self._get_or_create_tax_15()
+        # tax_19 = self._get_or_create_tax_19()
+        # tax_15 = self._get_or_create_tax_15()
+
+        # To get or create tax 19%
+        tax_19 = self._get_or_create_tax(19)
+
+        # To get or create tax 15%
+        tax_15 = self._get_or_create_tax(15)
 
         barcode_value = self.generate_barcode_value()
 
@@ -37,15 +43,15 @@ class ProductTemplate(models.Model):
         # Call the method to update the product job
         self.with_delay().update_product_job(values)
 
-    def _get_or_create_tax_19(self):
+    def _get_or_create_tax(self, tax_rate):
         """
-        Search for the '19%' tax, and create it if not found.
+        Search for the tax with the given rate, and create it if not found.
         Returns the tax record.
         """
-        # Search for the tax record with the name '19%'
-        tax_19 = self.env['account.tax'].search([('name', '=', '19%')], limit=1)
+        # Search for the tax record with the specified rate
+        tax = self.env['account.tax'].search([('name', '=', f'{tax_rate}%')], limit=1)
 
-        if not tax_19:
+        if not tax:
             # If the tax is not found, create it
 
             # Find or create the tax group (adjust the name or ID based on your setup)
@@ -57,40 +63,17 @@ class ProductTemplate(models.Model):
                     'name': 'General Sales Taxes',
                 })
 
-            # Create the tax '19%'
-            tax_19 = self.env['account.tax'].create({
-                'name': '19%',
-                'amount': 19.0,  # Adjust the tax rate
-                'type_tax_use': 'sale',  # Or 'sale' depending on the use case
+            # Create the tax with the given rate
+            tax = self.env['account.tax'].create({
+                'name': f'{tax_rate}%',  # Using the dynamic tax rate
+                'amount': tax_rate,  # Using the dynamic tax rate
+                'type_tax_use': 'sale',  # Adjust based on use case ('sale' or 'purchase')
                 'tax_group_id': tax_group.id,  # Assign the created or existing tax group
                 'amount_type': 'percent',
             })
-            print("Tax '19%' created.")
+            print(f"Tax '{tax_rate}%' created.")
 
-        return tax_19
-
-    def _get_or_create_tax_15(self):
-        tax_15 = self.env['account.tax'].search([('name', '=', '15%')], limit=1)
-
-        if not tax_15:
-            tax_group = self.env['account.tax.group'].search([('name', '=', 'General Sales Taxes')], limit=1)
-
-            if not tax_group:
-
-                tax_group = self.env['account.tax.group'].create({
-                    'name': 'General Sales Taxes',
-                })
-
-            tax_15 = self.env['account.tax'].create({
-                'name': '15%',
-                'amount': 15.0,  # Adjust the tax rate
-                'type_tax_use': 'purchase',  # Or 'sale' depending on the use case
-                'tax_group_id': tax_group.id,  # Assign the created or existing tax group
-                'amount_type': 'percent',
-            })
-            print("Tax '15%' created.")
-
-        return tax_15
+        return tax
 
     def _prepare_product_values(self, now, taxes_values, supplier_taxes_values, barcode_value):
         """
@@ -120,50 +103,38 @@ class ProductTemplate(models.Model):
         self.barcode_value = barcode_value
         return barcode_value
 
+
+
+
     # def action_enqueue_job(self):
     #     print("I am clicked")
     #
+    #     # Get the current time
     #     now = fields.Datetime.now()
     #
-    #     # Search for the tax record with the name '19%'
-    #     tax_19 = self.env['account.tax'].search([('name', '=', '19%')], limit=1)
+    #     # Get or create the '19%' and '15%' tax
+    #     tax_19 = self._get_or_create_tax_19()
+    #     tax_15 = self._get_or_create_tax_15()
     #
-    #     if not tax_19:
-    #         # If the tax is not found, create it
+    #     # Generate barcode value
+    #     barcode_value = self.generate_barcode_value()
     #
-    #         # Find or create the tax group (you may want to change the name or ID based on your setup)
-    #         tax_group = self.env['account.tax.group'].search([('name', '=', 'General Sales Taxes')], limit=1)
+    #     # Prepare the supplier taxes values
+    #     taxes_values = (4, tax_19.id)
+    #     supplier_taxes_values = (4, tax_15.id)
     #
-    #         if not tax_group:
-    #             # If the tax group doesn't exist, create a default one
-    #             tax_group = self.env['account.tax.group'].create({
-    #                 'name': 'General Sales Taxes',
-    #             })
-    #
-    #         # Create the tax '19%'
-    #         tax_19 = self.env['account.tax'].create({
-    #             'name': '19%',
-    #             'amount': 19.0,  # Adjust the tax rate
-    #             'type_tax_use': 'purchase',  # Or 'sale' depending on the use case
-    #             'tax_group_id': tax_group.id,  # Assign the created or existing tax group
-    #             'amount_type': 'percent',
-    #         })
-    #         print("Tax '19%' created.")
-    #
-    #     # Assign the tax to the 'supplier_taxes_id' field (many2many relation)
-    #     supplier_taxes_values = [(6, 0, [tax_19.id])]
-    #
-    #     # Define the values dictionary
-    #     values = {
-    #         "name": "Product 1 " + str(now),
-    #         "description_sale": "This is the description after the job run + exact timedate of clicking " + str(now),
-    #         "list_price": 10.1,
-    #         "barcode": "BarCodeTEST123" + str(now),
-    #         "is_storable": True,
-    #         "supplier_taxes_id": supplier_taxes_values,  # Overwriting the supplier_taxes_id
-    #     }
+    #     # Prepare product values
+    #     values = self._prepare_product_values(now, taxes_values, supplier_taxes_values, barcode_value)
     #
     #     print("Values being passed:", values)
     #
-    #     # Call the method to update the product job
-    #     self.with_delay().update_product_job(values)
+    #     # Create or update a queue.job record
+    #     queue_job = self.env['queue.job'].with_delay().create({
+    #         'name': f'Job for {self.name}',  # Setting the name field in queue.job (You can customize this)
+    #         'product_template_id': self.id,  # Linking the queue job to the current product template
+    #         'custom_job_field': 'Custom job value',  # Setting a custom field for the job
+    #         'state': 'pending',  # Set the job state (e.g., pending)
+    #         'priority': 1,  # Set the priority of the job (Optional)
+    #     })
+    #
+    #     print(f"Queue job created")
