@@ -135,8 +135,29 @@ class ProductTemplate(models.Model):
         return
 
     def generate_barcode_value(self):
-        barcode_value = "".join(
-            random.choices(string.digits, k=12)
-        )  # EAN-13 is 12 digits long
+        # Define a function to generate a random barcode value
+        def generate_unique_barcode():
+            return "".join(
+                random.choices(string.digits, k=12)
+            )  # EAN-13 is 12 digits long
+
+        # Generate a barcode and check if it already exists
+        barcode_value = generate_unique_barcode()
+
+        # Check if the barcode already exists in the system
+        existing_barcode = self.env["product.template"].search(
+            [("barcode_value", "=", barcode_value)], limit=1
+        )
+
+        # If the barcode exists, regenerate the barcode value
+        while existing_barcode:
+            barcode_value = generate_unique_barcode()
+            existing_barcode = self.env["product.template"].search(
+                [("barcode_value", "=", barcode_value)], limit=1
+            )
+
+        # Assign the unique barcode value to the product's barcode field
         self.barcode_value = barcode_value
+
+        # Return the generated barcode value
         return barcode_value
