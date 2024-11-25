@@ -91,10 +91,13 @@ class ProductTemplate(models.Model):
     def _prepare_product_values(self, now, taxes_values, supplier_taxes_values, barcode_value):
         """
         Prepare the values dictionary for creating/updating a product.
+        You can include {self.name} dynamically here, but be aware that {self.name} may not be set yet.
         """
+        product_name = self.name if self.name else "Product 1"  # Fallback in case self.name is not set
+
         product_values = {
-            "name": "Product 1 " + str(now),
-            "description_sale": "This is the description after the job run + exact timedate of clicking " + str(now),
+            "name": f"{product_name} - {str(now)}",  # Using self.name with the timestamp
+            "description_sale": f"This is the description after the job run + exact timedate of clicking {str(now)}",
             "list_price": 10.1,
             "barcode": barcode_value,
             "is_storable": True,
