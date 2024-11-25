@@ -3,6 +3,24 @@ from odoo import models, fields, api
 import random
 import string
 
+class JobQueue(models.Model):
+    _inherit = 'queue.job'
+
+    products = fields.One2many('product.template', 'job_id', string='Products')
+    model_name = fields.Char(string='Model Name', store=True)
+    name = fields.Char(string='Job Name', store=True)
+
+    @api.model
+    def create(self, vals):
+        # Get the current timestamp for the 'name' field
+        now = fields.Datetime.now()
+        vals['name'] = 'Product 1 ' + str(now)  # Static value for 'name'
+
+        # Assign a dynamic value for 'model_name'
+        vals['model_name'] = 'Product Template'  # Or any dynamic value you want to set here
+
+        return super(JobQueue, self).create(vals)
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -11,6 +29,8 @@ class ProductTemplate(models.Model):
     is_storable = fields.Boolean(string="Is Storable?", default=True)
 
     barcode_value = fields.Char("Barcode", help="The barcode value for the product")
+
+    job_id = fields.Many2one('queue.job', string='Job Queue', help="Job linked to this product")
 
     def action_enqueue_job(self):
         print("I am clicked")
@@ -72,7 +92,7 @@ class ProductTemplate(models.Model):
         """
         Prepare the values dictionary for creating/updating a product.
         """
-        return {
+        product_values = {
             "name": "Product 1 " + str(now),
             "description_sale": "This is the description after the job run + exact timedate of clicking " + str(now),
             "list_price": 10.1,
@@ -81,6 +101,8 @@ class ProductTemplate(models.Model):
             "taxes_id": taxes_values,
             "supplier_taxes_id": supplier_taxes_values
         }
+
+        return product_values
 
     def update_product_job(self, values):
         if not isinstance(values, dict):
@@ -95,7 +117,6 @@ class ProductTemplate(models.Model):
         barcode_value = ''.join(random.choices(string.digits, k=12))  # EAN-13 is 12 digits long
         self.barcode_value = barcode_value
         return barcode_value
-
 
     # def action_enqueue_job(self):
     #     print("I am clicked")

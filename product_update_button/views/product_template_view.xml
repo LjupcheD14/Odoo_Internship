@@ -9,4 +9,21 @@
             </xpath>
         </field>
     </record>
+
+
+    <!-- Inheriting and modifying the form view of queue.job -->
+    <!-- Inherit the queue.job.form view -->
+<!--    <record id="view_queue_job_form_inherit" model="ir.ui.view">-->
+<!--        <field name="name">queue.job.form.inherit</field>-->
+<!--        <field name="model">queue.job</field>-->
+<!--        <field name="inherit_id" ref="queue.view_queue_job_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            &lt;!&ndash; XPath expression to replace the 'name' field &ndash;&gt;-->
+<!--            <xpath expr="//field[@name='name']" position="replace">-->
+<!--                <field name="name" string="Custom Job Name" required="True"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
 </odoo>
