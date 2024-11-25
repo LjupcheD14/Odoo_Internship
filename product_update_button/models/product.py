@@ -17,7 +17,8 @@ class JobQueue(models.Model):
         product_name = self.env.context.get('product_name', 'Default Product Name')
 
         # Use the product_name in the job creation logic
-        vals['name'] = f"Job for: {product_name}"
+        vals['name'] = f"Job for: {product_name}" # Dynamic value
+        vals['model_name'] = 'Product Template' # Static value
 
         return super(JobQueue, self).create(vals)
 
