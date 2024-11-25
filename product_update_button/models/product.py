@@ -3,6 +3,7 @@ from odoo import models, fields, api
 import random
 import string
 
+
 class JobQueue(models.Model):
     _inherit = 'queue.job'
 
@@ -12,12 +13,11 @@ class JobQueue(models.Model):
 
     @api.model
     def create(self, vals):
-        # Get the current timestamp for the 'name' field
-        now = fields.Datetime.now()
-        vals['name'] = 'Product 1 ' + str(now)  # Static value for 'name'
+        # Get the product name from context
+        product_name = self.env.context.get('product_name', 'Default Product Name')
 
-        # Assign a dynamic value for 'model_name'
-        vals['model_name'] = 'Product Template'  # Or any dynamic value you want to set here
+        # Use the product_name in the job creation logic
+        vals['name'] = f"Job for: {product_name}"
 
         return super(JobQueue, self).create(vals)
 
@@ -52,6 +52,9 @@ class ProductTemplate(models.Model):
         values = self._prepare_product_values(now, taxes_values, supplier_taxes_values, barcode_value)
 
         print("Values being passed:", values)
+
+        # Add product_name to the context
+        self = self.with_context(product_name=self.name)
 
         # Call the method to update the product job
         self.with_delay().update_product_job(values)
