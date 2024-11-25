@@ -17,8 +17,8 @@ class JobQueue(models.Model):
         product_name = self.env.context.get('product_name', 'Default Product Name')
 
         # Use the product_name in the job creation logic
-        vals['name'] = f"Job for: {product_name}" # Dynamic value
-        vals['model_name'] = 'Product Template' # Static value
+        vals['name'] = f"Job for: {product_name}"  # Dynamic value
+        vals['model_name'] = 'Product Template'  # Static value
 
         return super(JobQueue, self).create(vals)
 
@@ -124,36 +124,3 @@ class ProductTemplate(models.Model):
         barcode_value = ''.join(random.choices(string.digits, k=12))  # EAN-13 is 12 digits long
         self.barcode_value = barcode_value
         return barcode_value
-
-    # def action_enqueue_job(self):
-    #     print("I am clicked")
-    #
-    #     # Get the current time
-    #     now = fields.Datetime.now()
-    #
-    #     # Get or create the '19%' and '15%' tax
-    #     tax_19 = self._get_or_create_tax_19()
-    #     tax_15 = self._get_or_create_tax_15()
-    #
-    #     # Generate barcode value
-    #     barcode_value = self.generate_barcode_value()
-    #
-    #     # Prepare the supplier taxes values
-    #     taxes_values = (4, tax_19.id)
-    #     supplier_taxes_values = (4, tax_15.id)
-    #
-    #     # Prepare product values
-    #     values = self._prepare_product_values(now, taxes_values, supplier_taxes_values, barcode_value)
-    #
-    #     print("Values being passed:", values)
-    #
-    #     # Create or update a queue.job record
-    #     queue_job = self.env['queue.job'].with_delay().create({
-    #         'name': f'Job for {self.name}',  # Setting the name field in queue.job (You can customize this)
-    #         'product_template_id': self.id,  # Linking the queue job to the current product template
-    #         'custom_job_field': 'Custom job value',  # Setting a custom field for the job
-    #         'state': 'pending',  # Set the job state (e.g., pending)
-    #         'priority': 1,  # Set the priority of the job (Optional)
-    #     })
-    #
-    #     print(f"Queue job created")
