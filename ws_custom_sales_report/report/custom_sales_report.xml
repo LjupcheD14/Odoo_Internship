@@ -88,8 +88,17 @@
                                         <tr>
                                             <td class="section-header">Total Amount:</td>
                                             <td class="section-value">
-                                                <t t-esc="doc.amount_total"/>
+                                                <!-- Check if amount_total is greater than 200 -->
+                                                <t t-if="doc.amount_total &gt; 200">
+                                                    <!-- Calculate and display the discount amount -->
+                                                    <t t-esc="doc.amount_total - (doc.amount_total * 0.1)"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <!-- If amount_total is less than or equal to 200, display the original amount -->
+                                                    <t t-esc="doc.amount_total"/>
+                                                </t>
                                             </td>
+
                                         </tr>
                                         <tr>
                                             <td class="section-header">Salesperson:</td>
