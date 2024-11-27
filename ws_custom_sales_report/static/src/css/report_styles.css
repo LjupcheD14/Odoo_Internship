@@ -1,0 +1,106 @@
+/* Apply styles to the report header */
+.report-header {
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Styling the order name section */
+.order-name {
+    font-weight: bold;
+    color: #2C3E50;
+    margin-bottom: 10px;
+}
+
+/* Styling the customer name section */
+.customer-name {
+    font-weight: bold;
+    color: #3498DB;
+    margin-bottom: 10px;
+}
+
+/* Style for the total amount section */
+.total-amount {
+    font-weight: bold;
+    color: #E74C3C;
+    margin-bottom: 10px;
+}
+
+/* Styling for salesperson details */
+.salesperson {
+    color: #16A085;
+    margin-bottom: 10px;
+}
+
+/* Sales team section */
+.sales-team {
+    color: #9B59B6;
+    margin-bottom: 10px;
+}
+
+/* Company details styling */
+.company {
+    color: #F39C12;
+    margin-bottom: 10px;
+}
+
+/* Fiscal position styling */
+.fiscal-position {
+    color: #34495E;
+    margin-bottom: 10px;
+}
+
+/* Invoicing Journal styling */
+.invoicing-journal {
+    color: #1ABC9C;
+    margin-bottom: 10px;
+}
+
+/* Invoice status styling */
+.invoice-status {
+    color: #F1C40F;
+    margin-bottom: 10px;
+}
+
+/* Online signature section */
+.online-signature {
+    color: #D35400;
+    margin-bottom: 10px;
+}
+
+/* Warehouse section */
+.warehouse {
+    color: #2ECC71;
+    margin-bottom: 10px;
+}
+
+/* Incoterm section */
+.incoterm {
+    color: #9B59B6;
+    margin-bottom: 10px;
+}
+
+/* Delivery Date section */
+.delivery-date {
+    color: #E67E22;
+    margin-bottom: 10px;
+}
+
+/* Campaign styling */
+.campaign {
+    color: #2980B9;
+    margin-bottom: 10px;
+}
+
+/* Medium section */
+.medium {
+    color: #8E44AD;
+    margin-bottom: 10px;
+}
+
+/* Source section */
+.source {
+    color: #16A085;
+    margin-bottom: 10px;
+}

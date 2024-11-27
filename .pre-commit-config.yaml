@@ -1,0 +1,9 @@
+# .pre-commit-config.yaml
+
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.10.0  # Use the specific version of Black you want
+    hooks:
+      - id: black
+        language_version: python3  # Or specify the Python version you want to use
+        files: \.py$  # Only run Black on Python files

@@ -1,0 +1,183 @@
+<odoo>
+    <!-- Define the Action for QWeb PDF Report -->
+    <record id="custom_sales_report_action" model="ir.actions.report">
+        <field name="name">Custom Sales Report</field>
+        <field name="model">sale.order</field>
+        <field name="report_name">ws_custom_sales_report.custom_sales_report_template</field>
+        <field name="report_type">qweb-pdf</field>
+    </record>
+
+    <!-- Define the Report Template -->
+    <template id="custom_sales_report_template">
+        <t t-name="ws_custom_sales_report.report_product_template">
+            <t t-call="web.html_container">
+                <html>
+                    <head>
+                        <style type="text/css">
+                            /* Apply a basic style to the table */
+                            table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-top: 20px;
+                            }
+                            th, td {
+                            padding: 8px 12px;
+                            text-align: left;
+                            border: 1px solid #ddd;
+                            }
+
+                            /* Table header style */
+                            th {
+                            background-color: #3498DB;
+                            color: white;
+                            font-weight: bold;
+                            }
+
+                            /* Odd row styling for alternating colors */
+                            tr:nth-child(odd) {
+                            background-color: #f2f2f2;
+                            }
+
+                            /* Even row styling for alternating colors */
+                            tr:nth-child(even) {
+                            background-color: #ffffff;
+                            }
+
+                            /* General content styling */
+                            .report-header {
+                            font-family: 'Arial', sans-serif;
+                            font-size: 24px;
+                            color: #333;
+                            margin-bottom: 20px;
+                            }
+
+                            .section-header {
+                            font-weight: bold;
+                            color: #2C3E50;
+                            }
+
+                            .section-value {
+                            color: #16A085;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <main>
+                            <h1 class="report-header">Custom Sales Report</h1>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="docs" t-as="doc">
+                                        <tr>
+                                            <td class="section-header">Order Name:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Customer:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.partner_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Total Amount:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.amount_total"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Salesperson:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.user_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Sales Team:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.team_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Company:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.company_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Fiscal Position:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.fiscal_position_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Invoicing Journal:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.journal_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Invoice Status:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.invoice_status"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Online Signature:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.require_signature and 'Yes' or 'No'"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Warehouse:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.warehouse_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Incoterm:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.incoterm.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Delivery Date:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.commitment_date"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Campaign:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.campaign_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Medium:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.medium_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="section-header">Source:</td>
+                                            <td class="section-value">
+                                                <t t-esc="doc.source_id.name"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </main>
+                    </body>
+                </html>
+            </t>
+        </t>
+
+
+    </template>
+</odoo>
