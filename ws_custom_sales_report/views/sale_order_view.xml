@@ -8,7 +8,12 @@
                 <!-- Custom Button for Report -->
                 <button name="action_print_custom_report"
                         type="object"
-                        string="Print Custom Report"
+                        string="Print Custom PDF"
+                        class="btn-primary"/>
+
+                <button name="action_export_custom_excel"
+                        type="object"
+                        string="Print custom Excel"
                         class="btn-primary"/>
             </header>
         </field>
