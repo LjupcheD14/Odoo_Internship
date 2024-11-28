@@ -5,26 +5,35 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <header>
-                <!-- Custom Button for Report -->
-                <button name="action_print_custom_report"
-                        type="object"
-                        string="Print Custom PDF"
-                        class="btn-primary"/>
-
-                <button name="action_export_custom_excel"
-                        type="object"
-                        string="Print Custom Excel"
-                        class="btn-primary"/>
-
-                <button name="action_export_custom_csv"
-                        type="object"
-                        string="Print Custom CSV"
-                        class="btn-primary"/>
-
-                <button name="action_export_custom_json"
-                        type="object"
-                        string="Export Custom JSON"
-                        class="btn-primary"/>
+                <!-- Dropdown for Export Options -->
+                <div class="dropdown">
+                    <button name="button_export" class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Export
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button name="action_print_custom_report" type="object" class="dropdown-item">
+                                Print Custom PDF
+                            </button>
+                        </li>
+                        <li>
+                            <button name="action_export_custom_excel" type="object" class="dropdown-item">
+                                Print Custom Excel
+                            </button>
+                        </li>
+                        <li>
+                            <button name="action_export_custom_csv" type="object" class="dropdown-item">
+                                Print Custom CSV
+                            </button>
+                        </li>
+                        <li>
+                            <button name="action_export_custom_json" type="object" class="dropdown-item">
+                                Export Custom JSON
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </header>
         </field>
     </record>
