@@ -1,6 +1,7 @@
 from odoo import models
 
 import xlsxwriter
+import csv
 import io
 import base64
 
@@ -60,12 +61,62 @@ class SaleOrder(models.Model):
         # Create the attachment
         attachment = self.env["ir.attachment"].create(
             {
-                "name": "sale_order_report.xlsx",
+                "name": "sale_order_excel_report.xlsx",
                 "type": "binary",
                 "datas": file_data,
                 "res_model": "sale.order",
                 "res_id": self.id,
                 "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            }
+        )
+
+        # Return the URL to the attachment
+        return {
+            "type": "ir.actions.act_url",
+            "url": "/web/content/%d?download=true" % attachment.id,
+            "target": "new",
+        }
+
+    def action_export_custom_csv(self):
+        """Button action to trigger the CSV export"""
+        # Create an in-memory file for CSV
+        output = io.StringIO()
+
+        # Create a CSV writer
+        writer = csv.writer(output)
+
+        # Write the header row
+        writer.writerow(["Order Name", "Customer", "Order Date", "Total Amount"])
+
+        # Fetch the sale order data (you can adjust the domain or fields as needed)
+        orders = self.search([("id", "=", self.id)])
+
+        # Write data rows for each sale order
+        for order in orders:
+            writer.writerow(
+                [
+                    order.name,
+                    order.partner_id.name,
+                    order.date_order.strftime("%Y-%m-%d") if order.date_order else "",
+                    order.amount_total,
+                ]
+            )
+
+        # Get the CSV content as string
+        file_data = output.getvalue()
+
+        # Base64 encode the CSV data
+        file_data_base64 = base64.b64encode(file_data.encode("utf-8")).decode("utf-8")
+
+        # Create the attachment
+        attachment = self.env["ir.attachment"].create(
+            {
+                "name": "sale_order_csv_report.csv",
+                "type": "binary",
+                "datas": file_data_base64,
+                "res_model": "sale.order",
+                "res_id": self.id,
+                "mimetype": "text/csv",
             }
         )
 

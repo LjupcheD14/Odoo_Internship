@@ -1,7 +1,7 @@
 <odoo>
     <!-- Define the Action for QWeb PDF Report -->
     <record id="custom_sales_report_action" model="ir.actions.report">
-        <field name="name">Custom Sales Report</field>
+        <field name="name">Custom Sales PDF Report</field>
         <field name="model">sale.order</field>
         <field name="report_name">ws_custom_sales_report.custom_sales_report_template</field>
         <field name="report_type">qweb-pdf</field>

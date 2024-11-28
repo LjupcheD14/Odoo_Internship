@@ -13,7 +13,12 @@
 
                 <button name="action_export_custom_excel"
                         type="object"
-                        string="Print custom Excel"
+                        string="Print Custom Excel"
+                        class="btn-primary"/>
+
+                <button name="action_export_custom_csv"
+                        type="object"
+                        string="Print Custom CSV"
                         class="btn-primary"/>
             </header>
         </field>
