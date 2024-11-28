@@ -20,6 +20,11 @@
                         type="object"
                         string="Print Custom CSV"
                         class="btn-primary"/>
+
+                <button name="action_export_custom_json"
+                        type="object"
+                        string="Export Custom JSON"
+                        class="btn-primary"/>
             </header>
         </field>
     </record>
