@@ -25,6 +25,8 @@ class JobQueue(models.Model):
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    is_urgent = fields.Boolean(string="Urgent", default=False)
+
     def action_enqueue_job(self):
         print("I am clicked")
 
