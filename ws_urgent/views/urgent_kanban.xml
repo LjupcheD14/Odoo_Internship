@@ -1,0 +1,20 @@
+<odoo>
+    <record id="view_sale_order_kanban_inherit_urgent" model="ir.ui.view">
+        <field name="name">sale.order.kanban.inherit.urgent</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sale_order_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <field name="is_urgent"/>
+            </xpath>
+
+            <xpath expr="//t[@t-name='card']/div" position="inside">
+                <t t-if="record.is_urgent.raw_value">
+                    <div class="badge bg-danger text-white fw-bold me-2">
+                        <i class="fa fa-exclamation-triangle me-1"/> Urgent
+                    </div>
+                </t>
+            </xpath>
+        </field>
+    </record>
+</odoo>

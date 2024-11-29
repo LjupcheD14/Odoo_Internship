@@ -14,6 +14,7 @@
     "data": [
         "views/urgent_view.xml",
         "views/urgent_list.xml",
+        "views/urgent_kanban.xml",
     ],
     "installable": True,
     "application": False,
