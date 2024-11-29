@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_sales_order_filter_inherit_group_by_urgent" model="ir.ui.view">
+        <field name="name">sale.order.filter.inherit.group.by.urgent</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/filter[@name='order_month']" position="after">
+                <filter string="Urgent Status" name="urgent_status" domain="[]" context="{'group_by': 'is_urgent'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

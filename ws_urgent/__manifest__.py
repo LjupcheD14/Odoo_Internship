@@ -15,6 +15,7 @@
         "views/urgent_view.xml",
         "views/urgent_list_view.xml",
         "views/urgent_kanban_view.xml",
+        "views/urgent_filter_view.xml",
     ],
     "installable": True,
     "application": False,

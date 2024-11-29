@@ -8,7 +8,6 @@
             <xpath expr="//field" position="before">
                 <field name="is_urgent" widget="boolean" string="Urgent"/>
             </xpath>
-
         </field>
     </record>
 </odoo>
