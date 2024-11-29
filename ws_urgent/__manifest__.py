@@ -13,8 +13,8 @@
     "depends": ["base", "sale", "mail"],
     "data": [
         "views/urgent_view.xml",
-        "views/urgent_list.xml",
-        "views/urgent_kanban.xml",
+        "views/urgent_list_view.xml",
+        "views/urgent_kanban_view.xml",
     ],
     "installable": True,
     "application": False,
