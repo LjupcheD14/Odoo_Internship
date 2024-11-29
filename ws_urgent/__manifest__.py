@@ -10,7 +10,7 @@
     "website": "https://www.wesolved.com",
     "license": "AGPL-3",
     "summary": "Individual project: Added a button to update product in product template",
-    "depends": ["base", "sale"],
+    "depends": ["base", "sale", "mail"],
     "data": [
         "views/urgent_view.xml",
         "views/urgent_list.xml",
