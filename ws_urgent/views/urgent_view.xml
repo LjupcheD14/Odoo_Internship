@@ -5,12 +5,25 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <header>
-
-                <button name="action_mark_as_urgent"
-                        type="object"
-                        string="Mark as Urgent"
-                        class="btn-primary"/>
-
+                <div class="dropdown">
+                    <button name="button_urgent" class="btn btn-primary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Urgent
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button name="action_mark_as_urgent" type="object" class="dropdown-item">
+                                Make Urgent
+                            </button>
+                        </li>
+                        <li>
+                            <button name="action_mark_as_not_urgent" type="object" class="dropdown-item">
+                                Make Not Urgent
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </header>
         </field>
     </record>
