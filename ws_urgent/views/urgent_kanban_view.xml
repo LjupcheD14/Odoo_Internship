@@ -8,9 +8,9 @@
                 <field name="is_urgent"/>
             </xpath>
 
-            <xpath expr="//t[@t-name='card']/div" position="inside">
+            <xpath expr="//t[@t-name='card']/div" position="before">
                 <t t-if="record.is_urgent.raw_value">
-                    <div class="badge bg-danger text-white fw-bold me-2">
+                    <div class="badge bg-danger text-white fw-bold mb-2" style="padding: 5px; border-radius: 5px;">
                         <i class="fa fa-exclamation-triangle me-1"/> Urgent
                     </div>
                 </t>
