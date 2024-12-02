@@ -17,6 +17,11 @@
         "views/urgent_kanban_view.xml",
         "views/urgent_filter_view.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "ws_urgent/static/src/js/urgent_filter.js",  # Include JS file here
+        ],
+    },
     "installable": True,
     "application": False,
 }
