@@ -40,3 +40,8 @@ class SaleOrder(models.Model):
                 "type": "success",
             },
         }
+
+    def amount_total_above_200(self):
+        # Filter sale orders with amount_total > 200
+        sale_orders = self.env["sale.order"].search([("amount_total", ">", 200)])
+        return sale_orders

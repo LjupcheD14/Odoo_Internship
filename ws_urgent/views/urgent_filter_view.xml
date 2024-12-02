@@ -8,46 +8,22 @@
             <xpath expr="//group/filter[@name='order_month']" position="after">
                 <filter string="Urgent Status" name="urgent_status" domain="[]" context="{'group_by': 'is_urgent'}"/>
             </xpath>
-
-            <xpath expr="//group/filter[@name='order_month']" position="after">
-
-            </xpath>
         </field>
     </record>
 
-        <record id="sale_order_view_search_inherit" model="ir.ui.view">
-            <field name="name">sale.order.search.inherit</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-            <field name="arch" type="xml">
-                <filter name="my_sale_orders_filter" position="after">
-                    <group string="Urgent Filter" expand="0">
-                        <filter string="Urgent" name="urgent_true" domain="[('is_urgent', '=', True)]"/>
-                        <filter string="Not Urgent" name="urgent_false" domain="[('is_urgent', '=', False)]"/>
-                    </group>
-                </filter>
-            </field>
-        </record>
-
-
-<!--    <record id="sale_order_view_search_inherit" model="ir.ui.view">-->
-<!--        <field name="name">sale.order.search.inherit</field>-->
-<!--        <field name="model">sale.order</field>-->
-<!--        <field name="inherit_id" ref="sale.view_sales_order_filter"/>-->
-<!--        <field name="arch" type="xml">-->
-<!--            &lt;!&ndash; Add "Urgent Filter" dropdown to the Filters section &ndash;&gt;-->
-<!--            <filter name="my_sale_orders_filter" position="after">-->
-<!--                <separator/>-->
-<!--                <filter string="Urgent Filter" name="urgent_filter" domain="[]"/>-->
-<!--            </filter>-->
-
-<!--            &lt;!&ndash; Create the Urgent and Not Urgent filter options &ndash;&gt;-->
-<!--            <filter name="urgent_true" position="after">-->
-<!--                <filter string="Urgent" name="urgent_true" domain="[('is_urgent', '=', True)]"/>-->
-<!--                <filter string="Not Urgent" name="urgent_false" domain="[('is_urgent', '=', False)]"/>-->
-<!--            </filter>-->
-<!--        </field>-->
-<!--    </record>-->
-
+    <record id="sale_order_view_search_inherit" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <filter name="my_sale_orders_filter" position="after">
+                <group string="Urgent Filter" expand="0">
+                    <filter string="Urgent" name="urgent_true" domain="[('is_urgent', '=', True)]"/>
+                    <filter string="Not Urgent" name="urgent_false" domain="[('is_urgent', '=', False)]"/>
+                </group>
+                <filter string="Amount > 200" name="amount_above_200" domain="[('amount_total', '>', 200)]"/>
+            </filter>
+        </field>
+    </record>
 </odoo>
 
