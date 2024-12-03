@@ -45,3 +45,15 @@ class SaleOrder(models.Model):
         # Filter sale orders with amount_total > 200
         sale_orders = self.env["sale.order"].search([("amount_total", ">", 200)])
         return sale_orders
+
+    def amount_total_above_500(self):
+        # Filter sale orders with amount_total > 500
+        sale_orders = self.env["sale.order"].search([("amount_total", ">", 500)])
+        return sale_orders
+
+    def compute_high_value(self):
+        # Searching for sale orders with amount_total > 500 and state == 'sale'
+        sale_orders = self.env["sale.order"].search(
+            [("amount_total", ">", 500), ("state", "=", "sale")]
+        )
+        return sale_orders

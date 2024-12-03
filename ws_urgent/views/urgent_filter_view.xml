@@ -22,6 +22,13 @@
                     <filter string="Not Urgent" name="urgent_false" domain="[('is_urgent', '=', False)]"/>
                 </group>
                 <filter string="Amount > 200" name="amount_above_200" domain="[('amount_total', '>', 200)]"/>
+                <filter string="Amount > 500" name="amount_above_500" domain="[('amount_total', '>', 500)]"/>
+
+                <filter string="High Value Orders"
+                        name="compute_high_value"
+                        help="This filter shows all sale orders with a total amount greater than 500."
+                        domain="[('amount_total', '>', 500), ('state', '=', 'sale')]"/>
+
             </filter>
         </field>
     </record>
